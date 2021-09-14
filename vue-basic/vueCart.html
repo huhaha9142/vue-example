@@ -7,6 +7,16 @@
     <title>Vue Cart</title>
     <!-- 개발버전, 도움되는 콘솔 경고를 포함 -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        li {
+            height: 30px;
+
+        }
+        li button {
+            float: right;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body>
     <!-- 렌더링 영역 -->
@@ -18,8 +28,7 @@
                 <li v-for="item in items">{{ item.name }}</li>
             </ul>
         </div>
-        <shop-list v-bind:shopping-items="items">
-        </shop-list>
+        <shop-list v-bind:shopping-items="items"></shop-list>
         <cart-input v-on:add-item="addItem"></cart-input>
         <input type="checkbox" v-model="showOption">구입한 물건 보기
         <bought-list 
@@ -68,7 +77,7 @@
 
         //  구입한 물건 목록
         var boughtList = {
-            prips: ["bought-items"],
+            props: ["bought-items"],
             template: `
             <div>
                 <h2>구입한 물건들</h2>
@@ -146,7 +155,7 @@
                 removeItem: function(item) {
                     var index = this.items.indexOf(item);
                     if (index > -1) {   //  인덱스
-                        //  배열에서 요소를 삭제
+                        //  배열에서 요소 삭제
                         this.items.splice(index, 1);
                     }
                 }
