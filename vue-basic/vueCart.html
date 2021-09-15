@@ -40,10 +40,17 @@
     <script>
         //  전역 컴포넌트
         Vue.component("cart-header", {
-            template: '<h1>{{ title }}</h1>',
+            // template: '<h1>{{ title.toUpperCase() }}</h1>',
+            template: '<h1>{{ upperTitle }}</h1>',
             data: function() {
                 return {
                     title: 'Vue Cart'
+                }
+            },
+            computed: {
+                //  미리 계산 수행, 결과를 캐싱
+                upperTitle: function() {
+                    return this.title.toUpperCase();
                 }
             }
         })
@@ -60,19 +67,31 @@
             <div>
                 <h2>구입할 물건들</h2>
                 <ul>
-                    <li v-for="(item, index) in shoppingItems"
-                        v-if="!item.buy">{{item.name}}
+                    <!-- li v-for="(item, index) in shoppingItems"
+                        v-if="!item.buy" -->
+                    <li v-for="(item, index) in filteredItems">
+                        {{item.name}}
                         <button v-on:click="buyItem(item, index)">구매</button>
                     </li>   
                 </ul>
             </div>`,
+            //  v-on = @
             methods: {
                 buyItem: function(item, index) {
                     console.log("구매할 아이템:", item);
                     item.buy = true;
                 }
+            },
+            computed: {
+                filteredItems: function() {
+                    //  전달 받을 shoppingItem로부터
+                    //  item.buy == false 인 것만 필터링
+                    return this.shoppingItems.filter(item => {
+                        return !item.buy;   //  item.buy === false
+                    })
+                }
             }
-            //  v-on = @
+            
         }
 
         //  구입한 물건 목록
