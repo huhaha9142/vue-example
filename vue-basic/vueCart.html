@@ -101,8 +101,10 @@
             <div>
                 <h2>구입한 물건들</h2>
                 <ul>
-                    <li v-for="(item, index) in boughtItems"
-                        v-if="item.buy">{{ item.name }}
+                    <!-- li v-for="(item, index) in boughtItems"
+                        v-if="item.buy" -->
+                    <li v-for="(item,index) in filteredItems">
+                        {{ item.name }}
                         <button v-on:click="removeItem(item)">삭제</button>
                         <button v-on:click="cancelBuy(item)">구매 취소</button>
                     </li>
@@ -117,6 +119,14 @@
                     console.log("삭제할 아이템:", item);
                     this.$emit("remove-item", item);
                 }
+            },
+            computed: {
+                filteredItems: function() {
+                    //  미리 연산을 수행, 결과 캐싱
+                    return this.boughtItems.filter(item => {
+                        return item.buy;
+                    })
+                }
             }
         }
 
@@ -124,12 +134,24 @@
         var cartInput = {
             template: `
             <div>
+                <p>{{ message }}</p>
                 <input v-model="newItem">
                 <button @click="addItem">추가</button>
             </div>`,
             data: function() {
                 return {
-                    newItem: ""
+                    newItem: "",    //  감시
+                    message: "상품을 입력하세요."
+                }
+            },
+            watch: {
+                newItem: function(item) {
+                    console.log("watch:", item);
+                    if (this.newItem.trim().length > 0) {
+                        this.message = "상품을 등록하실 수 있습니다."
+                    } else {
+                        this.message = "상품을 입력하세요."
+                    }
                 }
             },
             methods: {
